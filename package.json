@@ -1,10 +1,11 @@
 {
-  "name": "gamingplatform",
+  "name": "gaming-platform",
   "version": "1.0.0",
   "scripts": {
-    "install-frontend": "cd frontend && npm install",
-    "build-frontend": "cd frontend && npm run build",
-    "start": "cd backend && npm install && node server.js",
-    "heroku-postbuild": "npm run install-frontend && npm run build-frontend"
+    "start": "node backend/server.js",
+    "build": "npm install --prefix frontend && npm run build --prefix frontend"
+  },
+  "engines": {
+    "node": "18.x"
   }
 }
