@@ -51,7 +51,7 @@ app.post("/upload-icon/:name", upload.single("icon"), (req, res) => {
   });
 });
 
-// FRONTEND SERVE KARNE KA CODE
+// FRONTEND KI BUILD FILES SERVE KARO
 app.use(express.static(path.join(__dirname, "../frontend/build")));
 
 app.get("*", (req, res) => {
