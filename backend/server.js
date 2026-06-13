@@ -61,6 +61,16 @@ app.use((err, req, res, next) => {
   res.status(err.statusCode || 500).json({ message: err.message || "Server error" });
 });
 
+const path = require("path");
+
+// Frontend serve karo
+app.use(express.static(path.join(__dirname, "../frontend/build")));
+
+// API routes ke baad, error handler se pehle ye daal
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
+});
+
 initSockets(server);
 
 const PORT = process.env.PORT || 5000;
