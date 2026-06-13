@@ -51,11 +51,6 @@ app.post("/upload-icon/:name", upload.single("icon"), (req, res) => {
   });
 });
 
-app.use(express.static(path.join(__dirname, "../frontend/build")));
-
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
-});
 
 app.use((err, req, res, next) => {
   console.log("API Error:", err.message);
