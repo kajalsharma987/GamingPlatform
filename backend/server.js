@@ -51,14 +51,12 @@ app.post("/upload-icon/:name", upload.single("icon"), (req, res) => {
   });
 });
 
-// FRONTEND KI BUILD FILES SERVE KARO
 app.use(express.static(path.join(__dirname, "../frontend/build")));
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
 });
 
-// ERROR HANDLER SABSE LAST ME
 app.use((err, req, res, next) => {
   console.log("API Error:", err.message);
   res.status(err.statusCode || 500).json({ message: err.message || "Server error" });
