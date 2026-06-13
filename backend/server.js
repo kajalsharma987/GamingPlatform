@@ -6,7 +6,7 @@ const settlementRoutes = require("./routes/settlementRoutes");
 const cors = require("cors");
 const helmet = require("helmet");
 const multer = require("multer");
-const path = require("path"); // ← Isko upar le aao
+const path = require("path"); 
 const ensureSchema = require("./initDb");
 const { initSockets } = require("./sockets");
 
@@ -51,16 +51,16 @@ app.post("/upload-icon/:name", upload.single("icon"), (req, res) => {
   });
 });
 
-// ↓↓↓ FRONTEND CODE YAHAN AAYEGA ↓↓↓
-// API routes ke baad, error handler se pehle
+
+
 app.use(express.static(path.join(__dirname, "../frontend/build")));
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
 });
-// ↑↑↑ FRONTEND CODE YAHAN KHATAM ↑↑↑
 
-// ↓↓↓ ERROR HANDLER SABSE LAST ME ↓↓↓
+
+
 app.use((err, req, res, next) => {
   console.log("API Error:", err.message);
   res.status(err.statusCode || 500).json({ message: err.message || "Server error" });
