@@ -2,11 +2,11 @@ require("dotenv").config();
 
 const http = require("http");
 const express = require("express");
-const settlementRoutes =
-require("./routes/settlementRoutes");
+const settlementRoutes = require("./routes/settlementRoutes");
 const cors = require("cors");
 const helmet = require("helmet");
 const multer = require("multer");
+const path = require("path"); // ← Isko upar le aao
 const ensureSchema = require("./initDb");
 const { initSockets } = require("./sockets");
 
@@ -17,11 +17,8 @@ app.use(cors());
 app.use(helmet());
 app.use(express.json());
 app.use("/uploads", express.static("uploads"));
-app.use(
-  "/api/v1/settlement",
-  settlementRoutes
-);
 
+app.use("/api/v1/settlement", settlementRoutes);
 app.use("/", require("./routes/authRoutes"));
 app.use("/wallet", require("./routes/walletRoutes"));
 app.use("/games", require("./routes/gameRoutes"));
@@ -37,9 +34,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-app.post(
-  "/upload-logo",
-  (req, res, next) => {
+app.post("/upload-logo", (req, res, next) => {
     req.params.name = "logo";
     next();
   },
@@ -56,19 +51,19 @@ app.post("/upload-icon/:name", upload.single("icon"), (req, res) => {
   });
 });
 
+// ↓↓↓ FRONTEND CODE YAHAN AAYEGA ↓↓↓
+// API routes ke baad, error handler se pehle
+app.use(express.static(path.join(__dirname, "../frontend/build")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
+});
+// ↑↑↑ FRONTEND CODE YAHAN KHATAM ↑↑↑
+
+// ↓↓↓ ERROR HANDLER SABSE LAST ME ↓↓↓
 app.use((err, req, res, next) => {
   console.log("API Error:", err.message);
   res.status(err.statusCode || 500).json({ message: err.message || "Server error" });
-});
-
-const path = require("path");
-
-// Frontend serve karo
-app.use(express.static(path.join(__dirname, "../frontend/build")));
-
-// API routes ke baad, error handler se pehle ye daal
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
 });
 
 initSockets(server);
